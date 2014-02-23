@@ -12,7 +12,7 @@ module McClimate
     end
 
     def call
-      Result.new(@node.ident.token, complexity_score)
+      Result.new(@node.ident, complexity_score)
     end
 
     private

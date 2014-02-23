@@ -1,11 +1,10 @@
-require File.expand_path('./../../lib/mc_climate', __FILE__)
-require 'test/unit'
+require File.expand_path('./../test_helper', __FILE__)
 
 class ComplexityTest < Test::Unit::TestCase
 
   def assert_complexity(method_name, expected_complexity, result)
-    assert_not_empty result, 'Expected result not to be empty'
-    expected_method = result.find {|m| m.name == method_name }
+    assert_not_empty result.method_results, 'Expected method results not to be empty'
+    expected_method = result.method_results.find {|m| m.name.token == method_name }
     assert_not_nil expected_method, "Expected to find method #{method_name}"
     assert_equal expected_complexity, expected_method.complexity
   end

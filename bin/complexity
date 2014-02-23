@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require File.expand_path('./../../lib/mc_climate', __FILE__)
+
+repo_path = ARGV[0] || Dir.pwd
+
+repo = McClimate::Repository.new(repo_path)
+last_commit = repo.last_commit
+
+last_commit.blobs.each do |blob|
+  complexity_results = McClimate.complexity(blob.contents, blob.file)
+  reporter = McClimate::Reporter.new(complexity_results)
+  report = reporter.complexity_greater_than(10)
+  puts report unless report.empty?
+end
