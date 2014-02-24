@@ -4,10 +4,17 @@ require File.expand_path('./../mc_climate/blob', __FILE__)
 require File.expand_path('./../mc_climate/complexity_analyzer', __FILE__)
 require File.expand_path('./../mc_climate/parser', __FILE__)
 require File.expand_path('./../mc_climate/reporter', __FILE__)
+require File.expand_path('./../mc_climate/cache', __FILE__)
 
 module McClimate
 
-  ComplexityResult = Struct.new(:method_results, :file)
+  ComplexityResult = Struct.new(:method_results, :file) do
+
+    def self.deserialize(attrs)
+      new(attrs['method_results'], attrs['file'])
+    end
+
+  end
 
   def self.complexity(rb, file='-')
     complexity_analyzers = Parser.defns(rb).map do |defn_node|

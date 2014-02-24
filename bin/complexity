@@ -1,15 +1,26 @@
 #!/usr/bin/env ruby
 
 require File.expand_path('./../../lib/mc_climate', __FILE__)
+require File.expand_path('./../../lib/mc_climate/file_system_cache', __FILE__)
 
 repo_path = ARGV[0] || Dir.pwd
 
 repo = McClimate::Repository.new(repo_path)
 last_commit = repo.last_commit
 
-last_commit.blobs.each do |blob|
-  complexity_results = McClimate.complexity(blob.contents, blob.file)
-  reporter = McClimate::Reporter.new(complexity_results)
+file_system_cache = McClimate::FileSystemCache.new('cache.json')
+cache = McClimate::Cache.new(file_system_cache)
+
+complexity_results = cache.fetch!(repo_path, last_commit.sha) do
+  last_commit.blobs.map do |blob|
+    McClimate.complexity(blob.contents, blob.file)
+  end
+end
+
+cache.save
+
+complexity_results.each do |complexity_result|
+  reporter = McClimate::Reporter.new(complexity_result)
   report = reporter.complexity_greater_than(10)
   puts report unless report.empty?
 end
