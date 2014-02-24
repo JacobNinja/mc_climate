@@ -21,6 +21,6 @@ cache.save
 
 complexity_results.each do |complexity_result|
   reporter = McClimate::Reporter.new(complexity_result)
-  report = reporter.complexity_greater_than(1)
+  report = reporter.complexity_greater_than(McClimate::COMPLEXITY_THRESHOLD)
   puts report unless report.empty?
 end
