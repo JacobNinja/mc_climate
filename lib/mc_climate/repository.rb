@@ -13,7 +13,7 @@ module McClimate
 
     def commit(sha)
       files = git("ls-tree --name-only -r #{sha}").split("\n")
-      blobs = files.map {|file| Blob.new(file, git("show #{sha}:#{file}")) }
+      blobs = files.lazy.map {|file| Blob.new(file, git("show #{sha}:#{file}")) }
       Commit.new(sha, blobs)
     end
 
