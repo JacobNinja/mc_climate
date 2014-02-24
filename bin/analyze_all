@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require File.expand_path('./../../lib/mc_climate', __FILE__)
+require File.expand_path('./../../lib/mc_climate/file_system_cache', __FILE__)
+
+file_system_cache = McClimate::FileSystemCache.new('cache.json')
+cache = McClimate::Cache.new(file_system_cache)
+
+repo_path = ARGV[0] || Dir.pwd
+repo = McClimate::Repository.new(repo_path)
+
+repo.commits.each do |commit|
+  cache.fetch!(repo_path, commit.sha) do
+    commit.blobs.map do |blob|
+      McClimate.complexity(blob.contents, blob.file)
+    end
+  end
+end
+
+cache.save

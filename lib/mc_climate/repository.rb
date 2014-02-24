@@ -17,6 +17,12 @@ module McClimate
       Commit.new(sha, blobs)
     end
 
+    def commits
+      git('rev-list --all').split("\n").lazy.map do |sha|
+        commit(sha)
+      end
+    end
+
     private
 
     def git(command)

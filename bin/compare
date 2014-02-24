@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require File.expand_path('./../../lib/mc_climate', __FILE__)
+require File.expand_path('./../../lib/mc_climate/file_system_cache', __FILE__)
+
+file_system_cache = McClimate::FileSystemCache.new('cache.json')
+cache = McClimate::Cache.new(file_system_cache)
+
+result_a, result_b = ARGV.take(2).map {|sha| cache.fetch!(Dir.pwd, sha) { raise "Expected cache to exist for: #{sha}" } }
+
+report = McClimate::Reporter.new(result_a)
+puts report.compare(result_b)
