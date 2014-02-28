@@ -24,12 +24,9 @@ module McClimate
     end
 
     def call
+      # does this confuse code climate?
       Result.new(@node.ident, complexity_score)
-    end
-
-    private
-
-    def complexity_score
+    end; private; def complexity_score
       @node.deep_match([Matchers::IntegerMatcher, Matchers::MathMatcher]).count.next
     end
 
