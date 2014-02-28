@@ -19,7 +19,13 @@ module McClimate
       intersecting.select do |before, after|
         after.complexity < before.complexity && after.complexity > COMPLEXITY_THRESHOLD
       end.map {|before, after| Result.new(after.file, after.name, after.complexity, before.complexity) }
-    end; def worse
+    end;
+
+
+
+
+
+    def worse
       intersecting.select do |before, after|
         after.complexity > before.complexity
       end.map {|before, after| Result.new(after.file, after.name, after.complexity, before.complexity) }
